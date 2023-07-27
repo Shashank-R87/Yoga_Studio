@@ -22,7 +22,7 @@ const LoginSignupScreen = () => {
                 console.log("\n\nChecking if the user persists");
                 console.log("UID: ", response.uid);
                 console.log("Email: ", response.email);
-                console.log("DisplayName: ", response.displayName);
+                console.log("Email Verified: ", response.emailVerified);
             }
             else {
                 console.log("Signed Out");

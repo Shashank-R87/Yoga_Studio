@@ -4,12 +4,16 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import * as NavigationBar from 'expo-navigation-bar';
 import { useNavigation } from '@react-navigation/native';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 NavigationBar.setBackgroundColorAsync("white");
 
 const LoginScreen = () => {
 
     const navigation = useNavigation();
+
+    const firebase_auth = auth;
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -18,6 +22,18 @@ const LoginScreen = () => {
 
     const printEmailPassword = () => {
         console.log("LOGIN | Email: ", email, "| Password: ", password);
+    }
+
+    const logIn = () => {
+        signInWithEmailAndPassword(firebase_auth, email, password)
+        .then((response)=>{
+            console.log("Logged In");
+            const user = response.user;
+            console.log(user);
+        })
+        .catch((error)=>{
+            Alert.alert(error.code, error.message, ["Ok"]);
+        })
     }
 
     return (
@@ -44,7 +60,7 @@ const LoginScreen = () => {
                                 </Pressable> */}
                                 {
                                     continueEnable ?
-                                        <Pressable onPress={() => { printEmailPassword() }} style={[{
+                                        <Pressable onPress={() => { logIn() }} style={[{
                                             backgroundColor: "#E63946",
                                         }, { minWidth: "100%", height: 60, display: "flex", alignItems: "center", justifyContent: 'center', borderRadius: 100 }]}>
                                             <Text style={[{ color: "white" }, { fontFamily: "PoppinsRegular", fontSize: 16, paddingTop: 4 }]}>Continue</Text>

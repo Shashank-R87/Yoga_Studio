@@ -4,6 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import * as NavigationBar from 'expo-navigation-bar';
 import { useNavigation } from '@react-navigation/native';
+import { app, auth } from '../firebase';
+import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 
 NavigationBar.setBackgroundColorAsync("white");
 
@@ -18,6 +20,34 @@ const SignupScreen = () => {
 
     const printEmailPassword = () => {
         console.log("Email: ", email, "| Password: ", password);
+    }
+
+    const firebase_auth = auth;
+    const provider = new GoogleAuthProvider(app);
+
+    const signUp = () => {
+        createUserWithEmailAndPassword(firebase_auth, email, password)
+        .then((response)=>{
+            const user = response.user;
+            console.log(user);
+            consolf.log("Signed Up");
+        })
+        .catch((error)=>{
+            Alert.alert(error.code, error.message, ["Ok"]);
+        })
+    }
+
+    const continueGoogle = () => {
+        signInWithPopup(firebase_auth, provider)
+        .then((result)=>{
+            const cred = GoogleAuthProvider.credentialFromResult(result);
+            const token = cred.accessToken;
+            const user = result.user;
+            console.log(user);
+        })
+        .catch((error)=>{
+            console.log(error.code, error.message);
+        })
     }
 
     return (
@@ -44,7 +74,7 @@ const SignupScreen = () => {
                                 </Pressable> */}
                                 {
                                     continueEnable ?
-                                        <Pressable onPress={() => { printEmailPassword() }} style={[{
+                                        <Pressable onPress={() => { signUp() }} style={[{
                                             backgroundColor: "#E63946",
                                         }, { minWidth: "100%", height: 60, display: "flex", alignItems: "center", justifyContent: 'center', borderRadius: 100 }]}>
                                             <Text style={[{ color: "white" }, { fontFamily: "PoppinsRegular", fontSize: 16, paddingTop: 4 }]}>Continue</Text>
@@ -67,7 +97,7 @@ const SignupScreen = () => {
                         <Text style={{ color: "#92979E", fontFamily: "PoppinsLight", fontSize: 14 }}>OR</Text>
                     </View>
                     <View style={{ gap: 13.3 }} className="flex-col justify-center items-center">
-                        <TouchableOpacity activeOpacity={0.5} onPress={()=>{console.log("Continue with google pressed")}} style={{ minWidth: "100%", paddingHorizontal: 24, paddingVertical: 10, gap: 10 }} className="flex-row border-[2px] border-[#E5E6EB] rounded-full items-center">
+                        <TouchableOpacity activeOpacity={0.5} onPress={()=>{continueGoogle()}} style={{ minWidth: "100%", paddingHorizontal: 24, paddingVertical: 10, gap: 10 }} className="flex-row border-[2px] border-[#E5E6EB] rounded-full items-center">
                             <Image source={require("../assets/icons/Google.png")} />
                             <Text className="pt-[4px]" style={{ fontFamily: "PoppinsLight", fontSize: 14 }}>Continue with Google</Text>
                         </TouchableOpacity>

@@ -27,9 +27,7 @@ const LoginScreen = () => {
     const logIn = () => {
         signInWithEmailAndPassword(firebase_auth, email, password)
         .then((response)=>{
-            console.log("Logged In");
-            const user = response.user;
-            console.log(user);
+            navigation.replace("HomeScreen");
         })
         .catch((error)=>{
             Alert.alert(error.code, error.message, ["Ok"]);

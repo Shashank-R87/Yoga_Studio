@@ -28,8 +28,7 @@ const SignupScreen = () => {
         createUserWithEmailAndPassword(firebase_auth, email, password)
         .then((response)=>{
             const user = response.user;
-            console.log(user);
-            consolf.log("Signed Up");
+            navigation.replace("AboutYou");
         })
         .catch((error)=>{
             Alert.alert(error.code, error.message, ["Ok"]);

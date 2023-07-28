@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, Alert } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import * as NavigationBar from 'expo-navigation-bar';
@@ -11,6 +11,8 @@ NavigationBar.setBackgroundColorAsync("white");
 
 const LoginSignupScreen = () => {
 
+    // const [loggedIn, setloggedIn] = useState(false);
+
     const navigation = useNavigation();
 
     const firebase_auth = auth;
@@ -19,10 +21,12 @@ const LoginSignupScreen = () => {
     const getUser = async () => {
         await onAuthStateChanged(firebase_auth, (response) => {
             if (response) {
-                console.log("\n\nChecking if the user persists");
-                console.log("UID: ", response.uid);
-                console.log("Email: ", response.email);
-                console.log("Email Verified: ", response.emailVerified);
+                // // setloggedIn(true);
+                // console.log("\n\nChecking if the user persists");
+                // console.log("UID: ", response.uid);
+                // console.log("Email: ", response.email);
+                // console.log("Email Verified: ", response.emailVerified);
+                navigation.replace("HomeScreen");
             }
             else {
                 console.log("Signed Out");
@@ -34,16 +38,16 @@ const LoginSignupScreen = () => {
     const usersignOut = () => {
         signOut(firebase_auth)
             .then(() => {
-                    Alert.alert("SignOut", "Successfully signed out", ["Ok"]);
-                })
-            .catch(()=>{
+                Alert.alert("SignOut", "Successfully signed out", ["Ok"]);
+            })
+            .catch(() => {
                 Alert.alert("Failed", "Sign out failed", ["Ok"]);
             })
     }
 
-    useEffect(() => {
-        getUser();
-    }, [])
+    // useEffect(() => {
+    //     getUser();
+    // }, [])
 
     return (
         <SafeAreaView className="flex-1 justify-center items-center">
@@ -62,9 +66,13 @@ const LoginSignupScreen = () => {
                     <TouchableOpacity onPress={() => { navigation.navigate("SignUp") }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-[white] rounded-[100px] border-[#E63946] border-[1px]" >
                         <Text style={{ fontFamily: "PoppinsMedium", fontSize: 16 }} className="text-[#E63946] pt-[4px]">SIGN UP</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { usersignOut() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-[white] rounded-[100px] border-[#E63946] border-[1px]" >
-                        <Text style={{ fontFamily: "PoppinsMedium", fontSize: 16 }} className="text-[#E63946] pt-[4px]">SIGN OUT</Text>
-                    </TouchableOpacity>
+                    {/* {(loggedIn) ?
+                        <TouchableOpacity onPress={() => { usersignOut() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-[white] rounded-[100px] border-[#E63946] border-[1px]" >
+                            <Text style={{ fontFamily: "PoppinsMedium", fontSize: 16 }} className="text-[#E63946] pt-[4px]">SIGN OUT</Text>
+                        </TouchableOpacity> 
+                        :
+                        <View></View>
+                    } */}
                 </View>
 
             </View>

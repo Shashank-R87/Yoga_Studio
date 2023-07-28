@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Yoga Studio",
-    "slug": "yoga studio",
+    "slug": "yoga_studio",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#E63946"
-      }
+      },
+      "package": "com.shashankr87.yoga_studio"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "afeba408-af8f-48b1-94f8-bd5b3b95d3ab"
+      }
     }
   }
 }

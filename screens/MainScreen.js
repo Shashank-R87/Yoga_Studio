@@ -9,7 +9,8 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../firebase'
 
 const MainScreen = () => {
-    NavigationBar.setBackgroundColorAsync("#E63946");
+    NavigationBar.setVisibilityAsync("hidden");
+    NavigationBar.setBehaviorAsync("overlay-swipe");
 
     const navigation = useNavigation();
 
@@ -23,7 +24,7 @@ const MainScreen = () => {
                 // console.log("UID: ", response.uid);
                 // console.log("Email: ", response.email);
                 // console.log("Email Verified: ", response.emailVerified);
-                navigation.replace("HomeScreen");
+                navigation.replace("MainHome");
             }
             else {
                 navigation.replace("LoginSignup");

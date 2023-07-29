@@ -7,9 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
-NavigationBar.setBackgroundColorAsync("white");
 
 const LoginScreen = () => {
+    NavigationBar.setVisibilityAsync("hidden");
+    NavigationBar.setBehaviorAsync("overlay-swipe");
 
     const navigation = useNavigation();
 
@@ -27,7 +28,7 @@ const LoginScreen = () => {
     const logIn = () => {
         signInWithEmailAndPassword(firebase_auth, email, password)
         .then((response)=>{
-            navigation.replace("HomeScreen");
+            navigation.replace("MainHome");
         })
         .catch((error)=>{
             Alert.alert(error.code, error.message, ["Ok"]);

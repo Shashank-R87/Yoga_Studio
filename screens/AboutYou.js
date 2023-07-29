@@ -35,7 +35,7 @@ const AboutYou = () => {
             displayName: name
         })
         .then(()=>{
-            navigation.replace("HomeScreen");
+            navigation.replace("MainHome");
         })
         .catch((e)=>{
             Alert.alert(e.code, e.message, ["Ok"]);

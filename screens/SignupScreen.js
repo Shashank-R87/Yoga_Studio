@@ -11,6 +11,9 @@ NavigationBar.setBackgroundColorAsync("white");
 
 const SignupScreen = () => {
 
+    NavigationBar.setVisibilityAsync("hidden");
+    NavigationBar.setBehaviorAsync("overlay-swipe");
+
     const navigation = useNavigation();
 
     const [email, setEmail] = useState("");

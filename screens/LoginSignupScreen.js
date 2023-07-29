@@ -7,9 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
-NavigationBar.setBackgroundColorAsync("white");
 
 const LoginSignupScreen = () => {
+    NavigationBar.setVisibilityAsync("hidden");
+    NavigationBar.setBehaviorAsync("overlay-swipe");
 
     // const [loggedIn, setloggedIn] = useState(false);
 

@@ -6,8 +6,9 @@ import * as NavigationBar from 'expo-navigation-bar';
 import { auth } from '../firebase'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import * as Speech from 'expo-speech';
 
-const HomeScreen = () => {
+const ProfileScreen = () => {
     NavigationBar.setVisibilityAsync("hidden");
     NavigationBar.setBehaviorAsync("overlay-swipe");
 
@@ -51,14 +52,22 @@ const HomeScreen = () => {
     }, [])
 
     return (
-        <SafeAreaView style={{ paddingHorizontal: 25, paddingVertical: 25 }} className="flex-1 justify-start items-start">
-            <View style={{gap: -5}} className="flex items-start justify-start">
-                <Text style={{fontFamily: "PoppinsLightItalic", fontSize: 20}}>Hello</Text>
-                <Text style={{fontFamily: "PoppinsBold", fontSize: 28}}>{userdisplayName}</Text>
+        <SafeAreaView style={{ paddingHorizontal: 24 }} className="flex-1 justify-center items-center">
+            <View style={{ gap: 20, minWidth: "100%" }} className="flex items-start justify-start">
+                <Text>Display Name: {userdisplayName}</Text>
+                <Text>UID: {userUID}</Text>
+                <Text>Email: {userEmail}</Text>
+                {(loggedIn) ?
+                    <TouchableOpacity onPress={() => { usersignOut() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-[white] rounded-[100px] border-[#E63946] border-[1px]" >
+                        <Text style={{ fontFamily: "PoppinsMedium", fontSize: 16 }} className="text-[#E63946] pt-[4px]">SIGN OUT</Text>
+                    </TouchableOpacity>
+                    :
+                    <View></View>
+                }
             </View>
             <StatusBar style='dark' />
         </SafeAreaView>
     )
 }
 
-export default HomeScreen
+export default ProfileScreen

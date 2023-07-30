@@ -6,7 +6,6 @@ import * as NavigationBar from 'expo-navigation-bar';
 import { auth } from '../firebase'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import * as Speech from 'expo-speech';
 
 const ProfileScreen = () => {
     NavigationBar.setVisibilityAsync("hidden");
@@ -18,8 +17,8 @@ const ProfileScreen = () => {
     const [loggedIn, setloggedIn] = useState(false);
 
     const [userEmail, setuserEmail] = useState();
-    const [userUID, setuserUID] = useState();
     const [userdisplayName, setuserdisplayName] = useState();
+    const [usershortName, setusershortName] = useState();
 
     const firebase_auth = auth;
 
@@ -28,8 +27,8 @@ const ProfileScreen = () => {
             if (response) {
                 setloggedIn(true);
                 setuserEmail(response.email);
-                setuserUID(response.uid);
                 setuserdisplayName(response.displayName);
+                setusershortName(response.displayName.split(" ")[0])
             }
         })
     }
@@ -46,20 +45,58 @@ const ProfileScreen = () => {
             })
     }
 
+    const deleteUser = () => {
+        const user = firebase_auth.currentUser;
+        if (user){
+            deleteUser(user)
+            .then(() => { 
+                navigation.replace("LoginSignup");
+            })
+            .catch((e)=>{
+                Alert.alert(e.code, e.message, ["Ok"]);
+            })
+        }
+    }
+
     useEffect(() => {
         getUser();
-        console.log("Current Screen Name: ", route.name);
+        // console.log("Current Screen Name: ", route.name);
     }, [])
 
     return (
-        <SafeAreaView style={{ paddingHorizontal: 24 }} className="flex-1 justify-center items-center">
-            <View style={{ gap: 20, minWidth: "100%" }} className="flex items-start justify-start">
-                <Text>Display Name: {userdisplayName}</Text>
-                <Text>UID: {userUID}</Text>
-                <Text>Email: {userEmail}</Text>
+        <SafeAreaView style={{ paddingHorizontal: 24, paddingVertical: 24 }} className="flex-1 justify-start items-center">
+            <View style={{ gap: 30, minWidth: "100%" }} className="flex items-start justify-start">
+                <View style={{ gap: -5 }} className="flex items-start justify-start">
+                    <Text style={{ fontFamily: "PoppinsLightItalic", fontSize: 20 }}>Hello</Text>
+                    <Text style={{ fontFamily: "PoppinsBold", fontSize: 28 }}>{usershortName}!</Text>
+                </View>
+                <View style={{ gap: 10 }} className="flex-col justify-start items-start">
+                    <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
+                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Your name :</Text>
+                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-black">{userdisplayName}</Text>
+                    </View>
+                    <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
+                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Your email :</Text>
+                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-black">{userEmail}</Text>
+                    </View>
+                    {/* <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
+                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Email verification :</Text>
+                        {
+                            emailVerified ?
+                                <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#008000]">Verified</Text>
+                                :
+                                <View>
+                                    <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#ff2020]">Not Verified</Text>
+                                </View>
+                        }
+                    </View> */}
+                </View>
+                {/* <TouchableOpacity onPress={() => { deleteUser() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-[#E63946] rounded-[10px]" >
+                    <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-[#fff] pt-[4px]">Delete Account</Text>
+                </TouchableOpacity> */}
                 {(loggedIn) ?
-                    <TouchableOpacity onPress={() => { usersignOut() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-[white] rounded-[100px] border-[#E63946] border-[1px]" >
-                        <Text style={{ fontFamily: "PoppinsMedium", fontSize: 16 }} className="text-[#E63946] pt-[4px]">SIGN OUT</Text>
+                    <TouchableOpacity onPress={() => { usersignOut() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-black rounded-[10px]" >
+                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-[#fff] pt-[4px]">LOG OUT</Text>
                     </TouchableOpacity>
                     :
                     <View></View>

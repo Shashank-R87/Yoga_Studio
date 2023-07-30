@@ -8,7 +8,7 @@ const ContentScreen = () => {
     const route = useRoute();
 
     useEffect(()=>{
-        console.log("Current Screen Name: ", route.name);
+        // console.log("Current Screen Name: ", route.name);
     },[])
 
     return (

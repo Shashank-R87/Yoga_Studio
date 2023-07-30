@@ -54,7 +54,7 @@ const HomeScreen = () => {
         <SafeAreaView style={{ paddingHorizontal: 25, paddingVertical: 25 }} className="flex-1 justify-start items-start">
             <View style={{gap: -5}} className="flex items-start justify-start">
                 <Text style={{fontFamily: "PoppinsLightItalic", fontSize: 20}}>Hello</Text>
-                <Text style={{fontFamily: "PoppinsBold", fontSize: 28}}>{userdisplayName}</Text>
+                <Text style={{fontFamily: "PoppinsBold", fontSize: 28}} className="text-blue-700">{userdisplayName}</Text>
             </View>
             <StatusBar style='dark' />
         </SafeAreaView>

@@ -1,5 +1,5 @@
 import { View, Text, Image, TextInput, Pressable, Alert, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import * as NavigationBar from 'expo-navigation-bar';
@@ -16,8 +16,8 @@ const LoginScreen = () => {
 
     const firebase_auth = auth;
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
     const [passwordEnable, setpasswordEnable] = useState(false);
     const [continueEnable, setcontinueEnable] = useState(false);
 
@@ -27,13 +27,22 @@ const LoginScreen = () => {
 
     const logIn = () => {
         signInWithEmailAndPassword(firebase_auth, email, password)
-        .then((response)=>{
-            navigation.replace("MainHome");
-        })
-        .catch((error)=>{
-            Alert.alert(error.code, error.message, ["Ok"]);
-        })
+            .then((response) => {
+                navigation.replace("MainHome");
+            })
+            .catch((error) => {
+                Alert.alert(error.code, error.message, ["Ok"]);
+            })
     }
+
+    useEffect(() => {
+        if (email){
+            setpasswordEnable(true);
+        }
+        if (email && password) {
+            setcontinueEnable(true);
+        }
+    }, [email, password])
 
     return (
         <SafeAreaView style={{ paddingHorizontal: 25, paddingVertical: 58 }} className="flex-1 justify-center items-center">
@@ -82,11 +91,11 @@ const LoginScreen = () => {
                         <Text style={{ color: "#92979E", fontFamily: "PoppinsLight", fontSize: 14 }}>OR</Text>
                     </View>
                     <View style={{ gap: 13.3 }} className="flex-col justify-center items-center">
-                        <TouchableOpacity activeOpacity={0.5} onPress={()=>{console.log("Continue with google pressed")}} style={{ minWidth: "100%", paddingHorizontal: 24, paddingVertical: 10, gap: 10 }} className="flex-row border-[2px] border-[#E5E6EB] rounded-full items-center">
+                        <TouchableOpacity activeOpacity={0.5} onPress={() => { console.log("Continue with google pressed") }} style={{ minWidth: "100%", paddingHorizontal: 24, paddingVertical: 10, gap: 10 }} className="flex-row border-[2px] border-[#E5E6EB] rounded-full items-center">
                             <Image source={require("../assets/icons/Google.png")} />
                             <Text className="pt-[4px]" style={{ fontFamily: "PoppinsLight", fontSize: 14 }}>Continue with Google</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.5} onPress={()=>{console.log("Continue with microsoft pressed")}} style={{ minWidth: "100%", paddingHorizontal: 24, paddingVertical: 10, gap: 10 }} className="flex-row border-[2px] border-[#E5E6EB] rounded-full items-center">
+                        <TouchableOpacity activeOpacity={0.5} onPress={() => { console.log("Continue with microsoft pressed") }} style={{ minWidth: "100%", paddingHorizontal: 24, paddingVertical: 10, gap: 10 }} className="flex-row border-[2px] border-[#E5E6EB] rounded-full items-center">
                             <Image source={require("../assets/icons/Microsoft.png")} />
                             <Text className="pt-[4px]" style={{ fontFamily: "PoppinsLight", fontSize: 14 }}>Continue with Microsoft Account</Text>
                         </TouchableOpacity>

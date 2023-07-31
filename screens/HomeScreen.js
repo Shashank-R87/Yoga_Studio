@@ -63,7 +63,7 @@ const HomeScreen = () => {
                 {/* Frame 46 */}
                 <View style={{ gap: 10, height: 190 }} className="flex-col justify-start items-start">
                     <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>Few of the Yoga Asanas</Text>
-                    <ScrollView fadingEdgeLength={10} showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10, alignItems: 'center' }} horizontal className="rounded-[10px]">
+                    <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10, alignItems: 'center' }} horizontal className="rounded-[10px]">
                         <AsanaCard title={"Big Toe Pose"} type={"Backward Bend"} />
                         <AsanaCard title={"Chair Pose"} type={"Beginners'"} />
                         <AsanaCard title={"Dolhpin Pose"} type={"Core"} />

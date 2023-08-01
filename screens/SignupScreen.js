@@ -40,7 +40,6 @@ const SignupScreen = () => {
 
     useEffect(() => {
         if (email){
-            console.log(email);
             setpasswordEnable(true);
         }
         if (email && password) {

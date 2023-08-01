@@ -1,12 +1,12 @@
-import { View, Text } from 'react-native'
 import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import AnimatedLottieView from 'lottie-react-native'
 import { StatusBar } from 'expo-status-bar'
 import * as NavigationBar from 'expo-navigation-bar';
 import { useNavigation } from '@react-navigation/native'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../firebase'
+import LottieView from 'lottie-react-native'
+import InitialLoader from '../components/InitialLoader';
 
 const MainScreen = () => {
     NavigationBar.setVisibilityAsync("hidden");
@@ -38,7 +38,7 @@ const MainScreen = () => {
 
     return (
         <SafeAreaView className="flex-1 bg-[#E63946] items-center justify-center">
-            <AnimatedLottieView className="w-[300px]" autoPlay source={require("../assets/lottie/loading.json")} />
+            <InitialLoader />
             <StatusBar style='light' />
         </SafeAreaView>
     )

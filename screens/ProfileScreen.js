@@ -6,7 +6,7 @@ import * as NavigationBar from 'expo-navigation-bar';
 import { auth } from '../firebase'
 import { EmailAuthProvider, deleteUser, onAuthStateChanged, reauthenticateWithCredential, sendEmailVerification, signOut } from 'firebase/auth'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import AlertFunction from '../components/AlertFunction';
+import LottieView from "lottie-react-native"
 
 const ProfileScreen = () => {
     NavigationBar.setVisibilityAsync("hidden");
@@ -32,11 +32,13 @@ const ProfileScreen = () => {
     const getUser = async () => {
         await onAuthStateChanged(firebase_auth, (response) => {
             if (response) {
-                setloggedIn(true);
                 setuserEmail(response.email);
                 setuserdisplayName(response.displayName);
                 setusershortName(response.displayName.split(" ")[0]);
                 setEmailverification(response.emailVerified);
+                setTimeout(() => {
+                    setloggedIn(true);
+                }, 1000)
             }
         })
     }
@@ -63,28 +65,31 @@ const ProfileScreen = () => {
     //     })
     // }
 
+    const [deleting, setDeleting] = useState(false);
     const delete_User = async () => {
-
+        setDeleting(true);
         const cred = EmailAuthProvider.credential(user.email, deletePassword)
 
         await reauthenticateWithCredential(user, cred)
             .then(() => {
-                console.log("Reauthenticated");
+                deleteUser(user)
+                    .then(() => {
+                        navigation.replace("LoginSignup");
+                    })
+                    .catch((e) => {
+                        setDeleting(false);
+                        setModalVisible(false);
+                        Alert.alert(e.code, e.message, ["Ok"]);
+                    })
             })
             .catch((e) => {
+                setDeleting(false);
+                setModalVisible(false);
                 Alert.alert(e.code, e.message, ["Ok"])
             })
-        // deleteUser(user)
-        //     .then(() => {
-        //         navigation.replace("LoginSignup");
-        //     })
-        //     .catch((e) => {
-        //         Alert.alert(e.code, e.message, ["Ok"]);
-        //     })
     }
 
     const getPassword = () => {
-        setModalVisible(false);
         delete_User();
     }
 
@@ -94,22 +99,34 @@ const ProfileScreen = () => {
     }, [])
 
     return (
-        <SafeAreaView style={{ paddingHorizontal: 24, paddingVertical: 24 }} className="flex-1 justify-start items-center">
-            <View style={{ gap: 30, minWidth: "100%" }} className="flex items-start justify-start">
-                <View style={{ gap: -5 }} className="flex items-start justify-start">
-                    <Text style={{ fontFamily: "PoppinsLightItalic", fontSize: 20 }}>Hello</Text>
-                    <Text style={{ fontFamily: "PoppinsBold", fontSize: 28 }}>{usershortName}!</Text>
-                </View>
-                <View style={{ gap: 10 }} className="flex-col justify-start items-start">
-                    <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
-                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Your name :</Text>
-                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-black">{userdisplayName}</Text>
+        <SafeAreaView style={{ paddingHorizontal: 25, paddingVertical: 25 }} className="flex-1 justify-start items-center">
+            {
+                !loggedIn ?
+
+                    <View className="flex items-center justify-center">
+                        <LottieView
+                            className="justify-center items-center"
+                            style={{ width: "70%", height: "70%" }}
+                            autoPlay
+                            source={require("../assets/lottie/newScene.json")}
+                        />
                     </View>
-                    <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
-                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Your email :</Text>
-                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-black">{userEmail}</Text>
-                    </View>
-                    {/* <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
+                    :
+                    <View style={{ gap: 30, minWidth: "100%" }} className="flex items-start justify-start">
+                        <View style={{ gap: -5 }} className="flex items-start justify-start">
+                            <Text style={{ fontFamily: "PoppinsLightItalic", fontSize: 20 }}>Hello</Text>
+                            <Text style={{ fontFamily: "PoppinsBold", fontSize: 28 }}>{usershortName}!</Text>
+                        </View>
+                        <View style={{ gap: 10 }} className="flex-col justify-start items-start">
+                            <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
+                                <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Your name :</Text>
+                                <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-black">{userdisplayName}</Text>
+                            </View>
+                            <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
+                                <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Your email :</Text>
+                                <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-black">{userEmail}</Text>
+                            </View>
+                            {/* <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
                         <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Email verification :</Text>
                         {
                             emailVerified ?
@@ -121,35 +138,58 @@ const ProfileScreen = () => {
                                 </View>
                         }
                     </View> */}
-                </View>
-                {(loggedIn) ?
-                    <TouchableOpacity onPress={() => { setModalVisible(true) }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-[#E63946] rounded-[10px]" >
-                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-[#fff] pt-[4px]">Delete Account</Text>
-                    </TouchableOpacity>
-                    :
-                    <View></View>
-                }
-                {(loggedIn) ?
-                    <TouchableOpacity onPress={() => { usersignOut() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-black rounded-[10px]" >
-                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-[#fff] pt-[4px]">LOG OUT</Text>
-                    </TouchableOpacity>
-                    :
-                    <View></View>
-                }
-            </View>
-            <Modal animationType='fade' onRequestClose={() => { setModalVisible(false) }} statusBarTranslucent={true} transparent={true} visible={modalVisible}>
-                <View className="flex-1 justify-center items-center bg-[#00000032]">
-                    <View style={{ minHeight: "30%", maxHeight: "40%", minWidth: "90%", maxWidth: "90%", gap: 20, padding: 20, paddingTop: 80 }} className="bg-[#fff] items-center justify-center rounded-[20px]" >
-                        <Pressable onPress={() => { setModalVisible(false) }} style={{ position: 'absolute', top: 20, right: 20 }}>
-                            <Image source={require("../assets/icons/close.png")} />
-                        </Pressable>
-                        <Text style={{ textAlign: 'center', fontFamily: "PoppinsRegular", fontSize: 14, paddingHorizontal: 30 }}>To delete your account, enter the password for {user.email}</Text>
-                        <TextInput onChangeText={(text) => { setDeletePassword(text) }} returnKeyType='done' cursorColor={"grey"} textContentType='password' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "90%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Password' />
-                        <TouchableOpacity onPress={() => { getPassword() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "90%" }} className="flex cursor-pointer justify-center items-center bg-[#E63946] rounded-full">
-                            <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-[#fff] pt-[4px]">Continue</Text>
-                        </TouchableOpacity>
+                        </View>
+                        {(loggedIn) ?
+                            <TouchableOpacity onPress={() => { setModalVisible(true) }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-[#E63946] rounded-[10px]" >
+                                <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-[#fff] pt-[4px]">Delete Account</Text>
+                            </TouchableOpacity>
+                            :
+                            <View></View>
+                        }
+                        {(loggedIn) ?
+                            <TouchableOpacity onPress={() => { usersignOut() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "100%" }} className="flex cursor-pointer justify-center items-center bg-black rounded-[10px]" >
+                                <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-[#fff] pt-[4px]">LOG OUT</Text>
+                            </TouchableOpacity>
+                            :
+                            <View></View>
+                        }
                     </View>
+            }
+
+            <Modal animationType='fade' statusBarTranslucent={true} transparent={true} visible={modalVisible}>
+                <View className="flex-1 justify-center items-center bg-[#00000032]">
+                    {
+                        !deleting ?
+
+                            <View style={{ minHeight: "30%", maxHeight: "40%", minWidth: "90%", maxWidth: "90%", gap: 20, padding: 20, paddingTop: 80 }} className="bg-[#fff] items-center justify-center rounded-[20px]" >
+                                <Pressable onPress={() => { setModalVisible(false) }} style={{ position: 'absolute', top: 20, right: 20 }}>
+                                    <Image source={require("../assets/icons/close.png")} />
+                                </Pressable>
+                                <View>
+                                    <Text style={{ textAlign: 'center', fontFamily: "PoppinsRegular", fontSize: 14, paddingHorizontal: 30 }}>To delete your account, enter the password for</Text>
+                                    <Text style={{ textAlign: 'center', fontFamily: "PoppinsMedium", fontSize: 14, paddingHorizontal: 30 }}>{user.email}</Text>
+                                </View>
+                                <TextInput onChangeText={(text) => { setDeletePassword(text) }} returnKeyType='done' cursorColor={"grey"} textContentType='password' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "90%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Password' />
+                                <TouchableOpacity onPress={() => { getPassword() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "90%" }} className="flex cursor-pointer justify-center items-center bg-[#E63946] rounded-full">
+                                    <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-[#fff] pt-[4px]">Continue</Text>
+                                </TouchableOpacity>
+                            </View>
+                            :
+                            <View style={{ minHeight: "30%", maxHeight: "40%", minWidth: "90%", maxWidth: "90%", gap: 10, padding: 20 }} className="bg-[#fff] items-center justify-center rounded-[20px]" >
+                                <View className="justify-center items-center">
+                                    <Text style={{ textAlign: 'center', fontFamily: "PoppinsRegular", fontSize: 14, paddingHorizontal: 30 }}>Reauthenticating and deleting your account</Text>
+                                    <LottieView
+                                        className="justify-center items-center"
+                                        style={{ width: "60%", height: "60%" }}
+                                        autoPlay
+                                        source={require("../assets/lottie/newScene.json")}
+                                    />
+                                    <Text style={{ textAlign: 'center', fontFamily: "PoppinsMedium", fontSize: 14, paddingHorizontal: 30 }}>You will be redirected automatically</Text>
+                                </View>
+                            </View>
+                    }
                 </View>
+
             </Modal>
             <StatusBar style='dark' />
         </SafeAreaView>

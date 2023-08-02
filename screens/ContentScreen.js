@@ -65,7 +65,7 @@ const ContentScreen = () => {
                     setposeData(result.result[0]);
                     setgotData(true);
                     // console.log(poseData);
-                }, 2000)
+                }, 1000)
             })
     }
 
@@ -107,7 +107,7 @@ const ContentScreen = () => {
                                     poses.map(pose =>
                                         // <AsanaCardLarge key={pose._id} id={pose._id} title={pose.en_name} img={pose.imgUrl} />
                                         <TouchableOpacity key={pose._id} activeOpacity={0.8} onPress={() => { getId(pose._id) }} style={{ width: "100%", height: 150 }} className="bg-[#000] flex-col justify-end items-start rounded-[10px]" >
-                                            <Image className="rounded-[10px]" style={{ width: 362, height: 150, position: 'absolute', top: 0, right: 0, overflow: 'hidden' }} resizeMode='center' source={{ uri: pose.imgUrl }} />
+                                            <Image className="rounded-[10px]" style={{ width: 343, height: 150, position: 'absolute', top: 0, right: 0, overflow: 'hidden' }} resizeMode='center' source={{ uri: pose.imgUrl }} />
                                             <View style={{ width: "100%", height: 150, paddingHorizontal: 20, paddingVertical: 20 }} className="bg-[#00000047] flex-col justify-end items-start rounded-[10px]">
                                                 {
                                                     pose.en_name.length > 24 ?
@@ -147,34 +147,32 @@ const ContentScreen = () => {
                                     <Image style={{ width: 24, height: 24 }} source={require("../assets/icons/Close-Square.png")} />
                                 </Pressable>
                                 <View style={{ gap: 0 }} className="flex justify-start items-center">
-                                    <Text style={{ fontFamily: "PoppinsMedium", fontSize: 22, textAlign: 'center' }}>{poseData.en_name}</Text>
-                                    <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16, textAlign: 'center' }} className="text-[#565656]">Utkatasana</Text>
+                                    <Text style={{ fontFamily: "PoppinsMedium", fontSize: 22, textAlign: 'center', maxWidth: "80%" }}>{poseData.en_name}</Text>
+                                    <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16, textAlign: 'center', maxWidth: "80%" }} className="text-[#565656]">{poseData.san_name}</Text>
                                 </View>
-                                <Image style={{ width: "100%", height: 200, borderRadius: 10 }} resizeMode='center' source={{ uri: "https://cdn.yogajournal.com/wp-content/uploads/2021/11/Chair-Pose_Andrew-Clark_2400x1350.jpg" }} />
+                                <Image style={{ width: "100%", height: 200, borderRadius: 10 }} resizeMode='center' source={{ uri: poseData.imgUrl }} />
                                 <ScrollView style={{ height: 200 }} showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 30 }}>
-                                    <View style={{ gap: 10 }}>
+                                    <View className="justify-start items-start" style={{ gap: 10, maxWidth: "100%", minWidth: "100%" }}>
                                         <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }}>Description</Text>
-                                        <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>Utkatasana (Chair Pose) is sometimes translated from Sanskrit to English as “Fierce Seat” or “Powerful Pose.” It is a strengthening and heat-building asana that brings all parts of your body together into a cohesive and powerful whole.
-                                            This asana is a meditation on determination and perseverance, as well as commitment. To successfully perform Chair Pose, you must seamlessly unite the strength of the legs, arms, and torso as you lift your core muscles and lengthen your spine.</Text>
+                                        <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>{poseData.desc}</Text>
                                     </View>
-                                    <View style={{ gap: 10 }}>
+                                    <View className="justify-start items-start" style={{ gap: 10, maxWidth: "100%", minWidth: "100%" }}>
                                         <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }}>Benefits</Text>
-                                        <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>Chair Pose improves balance and can build cardiovascular health and resilience. It particularly strengthens your core, thighs, and ankles.</Text>
+                                        <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>{poseData.benefits}</Text>
                                     </View>
-                                    <View style={{ gap: 10 }}>
-                                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }}>Step by step instructions</Text>
-                                        <View style={{ maxWidth: "95%" }} className="flex-row justify-start items-start">
-                                            <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>1. </Text>
-                                            <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>Stand in Tadasana. Inhale and raise your arms overhead so that your biceps are just slightly in front of your ears. Either keep the arms parallel, palms facing inward, or join the palms.</Text>
-                                        </View>
-                                        <View style={{ maxWidth: "95%" }} className="flex-row justify-start items-start">
-                                            <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>1. </Text>
-                                            <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>Stand in Tadasana. Inhale and raise your arms overhead so that your biceps are just slightly in front of your ears. Either keep the arms parallel, palms facing inward, or join the palms.</Text>
-                                        </View>
-                                        <View style={{ maxWidth: "95%" }} className="flex-row justify-start items-start">
-                                            <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>1. </Text>
-                                            <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>Stand in Tadasana. Inhale and raise your arms overhead so that your biceps are just slightly in front of your ears. Either keep the arms parallel, palms facing inward, or join the palms.</Text>
-                                        </View>
+                                    <View className="justify-start items-start" style={{ gap: 10, maxWidth: "100%", minWidth: "100%" }}>
+                                        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16, textAlign: 'left' }}>Step by step instructions</Text>
+                                        {
+                                            poseData.steps ?
+                                            poseData.steps.map(step =>
+                                                <View key={poseData.steps.indexOf(step)} style={{ maxWidth: "95%" }} className="flex-row justify-start items-start">
+                                                    <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>{poseData.steps.indexOf(step)+1}. </Text>
+                                                    <Text className="text-[#565656]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>{step}</Text>
+                                                </View>
+                                            )
+                                            :
+                                            <View></View>
+                                        }
                                     </View>
                                 </ScrollView>
                             </View>

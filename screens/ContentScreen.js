@@ -107,7 +107,7 @@ const ContentScreen = () => {
                                     poses.map(pose =>
                                         // <AsanaCardLarge key={pose._id} id={pose._id} title={pose.en_name} img={pose.imgUrl} />
                                         <TouchableOpacity key={pose._id} activeOpacity={0.8} onPress={() => { getId(pose._id) }} style={{ width: "100%", height: 150 }} className="bg-[#000] flex-col justify-end items-start rounded-[10px]" >
-                                            <Image className="rounded-[10px]" style={{ width: 343, height: 150, position: 'absolute', top: 0, right: 0, overflow: 'hidden' }} resizeMode='center' source={{ uri: pose.imgUrl }} />
+                                            <Image className="rounded-[10px]" style={{ width: "100%", height: 150, position: 'absolute', top: 0, right: 0, overflow: 'hidden' }} resizeMode='center' source={{ uri: pose.imgUrl }} />
                                             <View style={{ width: "100%", height: 150, paddingHorizontal: 20, paddingVertical: 20 }} className="bg-[#00000047] flex-col justify-end items-start rounded-[10px]">
                                                 {
                                                     pose.en_name.length > 24 ?

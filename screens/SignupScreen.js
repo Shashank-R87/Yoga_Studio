@@ -29,17 +29,17 @@ const SignupScreen = () => {
 
     const signUp = () => {
         createUserWithEmailAndPassword(firebase_auth, email, password)
-        .then((response)=>{
-            const user = response.user;
-            navigation.replace("AboutYou");
-        })
-        .catch((error)=>{
-            Alert.alert(error.code, error.message, ["Ok"]);
-        })
+            .then((response) => {
+                const user = response.user;
+                navigation.replace("AboutYou");
+            })
+            .catch((error) => {
+                Alert.alert(error.code, error.message, ["Ok"]);
+            })
     }
 
     useEffect(() => {
-        if (email){
+        if (email) {
             setpasswordEnable(true);
         }
         if (email && password) {
@@ -56,22 +56,27 @@ const SignupScreen = () => {
                         <Text style={{ fontFamily: "PoppinsMedium", fontSize: 24 }} >Create your account</Text>
                         <View className="flex-col items-center">
                             <View style={{ gap: 10 }} className="flex-col items-center justify-center">
-                                <TextInput returnKeyType='done' onEndEditing={() => { email ? setpasswordEnable(true) : setpasswordEnable(false) }} onChangeText={(text) => { setEmail(text)     }} cursorColor={"grey"} textContentType='emailAddress' inputMode='email' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "100%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Email address' />
+                                <TextInput returnKeyType='done' onEndEditing={() => { email ? setpasswordEnable(true) : setpasswordEnable(false) }} onChangeText={(text) => { setEmail(text) }} cursorColor={"grey"} textContentType='emailAddress' inputMode='email' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "100%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Email address' />
                                 {passwordEnable ?
-                                    <TextInput returnKeyType='done' onEndEditing={() => { password ? setcontinueEnable(true) : setcontinueEnable(false) }} onChangeText={(text) => { setPassword(text) }} cursorColor={"grey"} textContentType='password' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "100%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Password' />
+                                    <View style={{ maxWidth: "100%", minWidth: "100%" }} className="flex-row items-center justify-start">
+                                        <TextInput secureTextEntry={secure} returnKeyType='done' onEndEditing={() => { password ? setcontinueEnable(true) : setcontinueEnable(false) }} onChangeText={(text) => { setPassword(text) }} cursorColor={"grey"} textContentType='password' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "100%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Password' />
+                                        {
+                                            secure ?
+                                                <Pressable onPress={() => { setSecure(false) }} className="absolute right-[30px]">
+                                                    <Image style={{ width: 24, height: 24 }} source={require("../assets/icons/eye.png")} />
+                                                </Pressable>
+                                                :
+                                                <Pressable onPress={() => { setSecure(true) }} className="absolute right-[30px]">
+                                                    <Image style={{ width: 24, height: 24 }} source={require("../assets/icons/closed-eye.png")} />
+                                                </Pressable>
+                                        }
+                                    </View>
                                     :
                                     <View></View>
                                 }
-                                {/* <Pressable onPress={() => { console.log(email) }} style={({ pressed }) => [{
-                                    backgroundColor: pressed ? "#E63946" : "#E5E6EB",
-                                }, { minWidth: "100%", height: 60, display: "flex", alignItems: "center", justifyContent: 'center', borderRadius: 100 }]}>
-                                    {({ pressed }) => (
-                                        <Text style={[{ color: pressed ? "white" : "#92979E" }, { fontFamily: "PoppinsRegular", fontSize: 16, paddingTop: 4 }]}>Continue</Text>
-                                    )}
-                                </Pressable> */}
                                 {
                                     continueEnable ?
-                                        <Pressable onPress={() => { signUp();}} style={[{
+                                        <Pressable onPress={() => { signUp(); }} style={[{
                                             backgroundColor: "#E63946",
                                         }, { minWidth: "100%", height: 60, display: "flex", alignItems: "center", justifyContent: 'center', borderRadius: 100 }]}>
                                             <Text style={[{ color: "white" }, { fontFamily: "PoppinsRegular", fontSize: 16, paddingTop: 4 }]}>Continue</Text>
@@ -94,11 +99,11 @@ const SignupScreen = () => {
                         <Text style={{ color: "#92979E", fontFamily: "PoppinsLight", fontSize: 14 }}>OR</Text>
                     </View>
                     <View style={{ gap: 13.3 }} className="flex-col justify-center items-center">
-                        <TouchableOpacity activeOpacity={0.5} onPress={()=>{console.log("Continue with google pressed")}} style={{ minWidth: "100%", paddingHorizontal: 24, paddingVertical: 10, gap: 10 }} className="flex-row border-[2px] border-[#E5E6EB] rounded-full items-center">
+                        <TouchableOpacity activeOpacity={0.5} onPress={() => { console.log("Continue with google pressed") }} style={{ minWidth: "100%", paddingHorizontal: 24, paddingVertical: 10, gap: 10 }} className="flex-row border-[2px] border-[#E5E6EB] rounded-full items-center">
                             <Image source={require("../assets/icons/Google.png")} />
                             <Text className="pt-[4px]" style={{ fontFamily: "PoppinsLight", fontSize: 14 }}>Continue with Google</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.5} onPress={()=>{console.log("Continue with microsoft pressed")}} style={{ minWidth: "100%", paddingHorizontal: 24, paddingVertical: 10, gap: 10 }} className="flex-row border-[2px] border-[#E5E6EB] rounded-full items-center">
+                        <TouchableOpacity activeOpacity={0.5} onPress={() => { console.log("Continue with microsoft pressed") }} style={{ minWidth: "100%", paddingHorizontal: 24, paddingVertical: 10, gap: 10 }} className="flex-row border-[2px] border-[#E5E6EB] rounded-full items-center">
                             <Image source={require("../assets/icons/Microsoft.png")} />
                             <Text className="pt-[4px]" style={{ fontFamily: "PoppinsLight", fontSize: 14 }}>Continue with Microsoft Account</Text>
                         </TouchableOpacity>

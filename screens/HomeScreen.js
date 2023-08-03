@@ -82,7 +82,6 @@ const HomeScreen = () => {
                         />
                     </View>
                     :
-
                     <View style={{gap:30}} className="flex-1 items-start justify-start">
                         <View style={{ gap: -5 }} className="flex items-start justify-start">
                             <Text style={{ fontFamily: "PoppinsLightItalic", fontSize: 20 }}>Hello</Text>

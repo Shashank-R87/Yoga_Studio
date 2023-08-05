@@ -47,6 +47,8 @@ const SignupScreen = () => {
         }
     }, [email, password])
 
+    const [secure, setSecure] = useState(true);
+
     return (
         <SafeAreaView style={{ paddingHorizontal: 25, paddingVertical: 58 }} className="flex-1 justify-center items-center">
             <View style={{ paddingVertical: 6.67, gap: 50 }} className="flex-col items-center">
@@ -56,10 +58,10 @@ const SignupScreen = () => {
                         <Text style={{ fontFamily: "PoppinsMedium", fontSize: 24 }} >Create your account</Text>
                         <View className="flex-col items-center">
                             <View style={{ gap: 10 }} className="flex-col items-center justify-center">
-                                <TextInput returnKeyType='done' onEndEditing={() => { email ? setpasswordEnable(true) : setpasswordEnable(false) }} onChangeText={(text) => { setEmail(text) }} cursorColor={"grey"} textContentType='emailAddress' inputMode='email' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "100%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Email address' />
+                                <TextInput returnKeyType='done' onChangeText={(text) => { setEmail(text) }} cursorColor={"grey"} textContentType='emailAddress' inputMode='email' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "100%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Email address' />
                                 {passwordEnable ?
                                     <View style={{ maxWidth: "100%", minWidth: "100%" }} className="flex-row items-center justify-start">
-                                        <TextInput secureTextEntry={secure} returnKeyType='done' onEndEditing={() => { password ? setcontinueEnable(true) : setcontinueEnable(false) }} onChangeText={(text) => { setPassword(text) }} cursorColor={"grey"} textContentType='password' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "100%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Password' />
+                                        <TextInput secureTextEntry={secure} returnKeyType='done' onChangeText={(text) => { setPassword(text) }} cursorColor={"grey"} textContentType='password' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "100%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Password' />
                                         {
                                             secure ?
                                                 <Pressable onPress={() => { setSecure(false) }} className="absolute right-[30px]">

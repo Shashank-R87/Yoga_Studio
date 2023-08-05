@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import * as NavigationBar from 'expo-navigation-bar';
-import { auth } from '../firebase'
+import { auth, database } from '../firebase'
 import { EmailAuthProvider, deleteUser, onAuthStateChanged, reauthenticateWithCredential, sendEmailVerification, signOut } from 'firebase/auth'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import LottieView from "lottie-react-native"
+import { child, get, ref, remove } from 'firebase/database';
 
 const ProfileScreen = () => {
     NavigationBar.setVisibilityAsync("hidden");
@@ -21,6 +22,7 @@ const ProfileScreen = () => {
     const [userdisplayName, setuserdisplayName] = useState();
     const [usershortName, setusershortName] = useState();
     const [emailVerified, setEmailverification] = useState();
+    const [userAge, setuserAge] = useState();
 
     const [deletePassword, setDeletePassword] = useState();
 
@@ -28,6 +30,8 @@ const ProfileScreen = () => {
 
     const firebase_auth = auth;
     const user = firebase_auth.currentUser;
+    const firebase_db = database;
+    const firebase_db_ref = ref(firebase_db);
 
     const getUser = async () => {
         await onAuthStateChanged(firebase_auth, (response) => {
@@ -36,6 +40,18 @@ const ProfileScreen = () => {
                 setuserdisplayName(response.displayName);
                 setusershortName(response.displayName.split(" ")[0]);
                 setEmailverification(response.emailVerified);
+                get(child(firebase_db_ref, `users/${response.uid}`))
+                    .then((snapshot) => {
+                        if (snapshot.exists()){
+                            setuserAge(snapshot.val().userAge)
+                        }
+                        else{
+                            Alert.alert("No User Data", "User data not found", ["Ok"])
+                        }
+                    })
+                    .catch((e)=>{
+                        Alert.alert(e.code, e.message, ["Ok"])
+                    })
                 setTimeout(() => {
                     setloggedIn(true);
                 }, 1000)
@@ -72,6 +88,7 @@ const ProfileScreen = () => {
 
         await reauthenticateWithCredential(user, cred)
             .then(() => {
+                remove(ref(firebase_db, 'users/' + user.uid))
                 deleteUser(user)
                     .then(() => {
                         navigation.replace("LoginSignup");
@@ -95,8 +112,9 @@ const ProfileScreen = () => {
 
     useEffect(() => {
         getUser();
-        // console.log("Current Screen Name: ", route.name);
     }, [])
+
+    const [secure, setSecure] = useState(true);
 
     return (
         <SafeAreaView style={{ paddingHorizontal: 25, paddingVertical: 25 }} className="flex-1 justify-start items-center">
@@ -125,6 +143,10 @@ const ProfileScreen = () => {
                             <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
                                 <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Your email :</Text>
                                 <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-black">{userEmail}</Text>
+                            </View>
+                            <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
+                                <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Your age :</Text>
+                                <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-black">{userAge}</Text>
                             </View>
                             {/* <View style={{ gap: 10, maxWidth: "70%" }} className="flex-row justify-start items-start">
                         <Text style={{ fontFamily: "PoppinsRegular", fontSize: 16 }} className="text-[#565656]">Email verification :</Text>
@@ -169,7 +191,19 @@ const ProfileScreen = () => {
                                     <Text style={{ textAlign: 'center', fontFamily: "PoppinsRegular", fontSize: 14, paddingHorizontal: 30 }}>To delete your account, enter the password for</Text>
                                     <Text style={{ textAlign: 'center', fontFamily: "PoppinsMedium", fontSize: 14, paddingHorizontal: 30 }}>{user.email}</Text>
                                 </View>
-                                <TextInput onChangeText={(text) => { setDeletePassword(text) }} returnKeyType='done' cursorColor={"grey"} textContentType='password' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "90%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Password' />
+                                <View className="flex justify-center">
+                                    <TextInput secureTextEntry={secure} onChangeText={(text) => { setDeletePassword(text) }} returnKeyType='done' cursorColor={"grey"} textContentType='password' style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "90%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Password' />
+                                    {
+                                        secure ?
+                                            <Pressable onPress={() => { setSecure(false) }} className="absolute right-[30px]">
+                                                <Image style={{ width: 24, height: 24 }} source={require("../assets/icons/eye.png")} />
+                                            </Pressable>
+                                            :
+                                            <Pressable onPress={() => { setSecure(true) }} className="absolute right-[30px]">
+                                                <Image style={{ width: 24, height: 24 }} source={require("../assets/icons/closed-eye.png")} />
+                                            </Pressable>
+                                    }
+                                </View>
                                 <TouchableOpacity onPress={() => { getPassword() }} activeOpacity={0.7} style={{ paddingVertical: 16, minWidth: "90%" }} className="flex cursor-pointer justify-center items-center bg-[#E63946] rounded-full">
                                     <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-[#fff] pt-[4px]">Continue</Text>
                                 </TouchableOpacity>

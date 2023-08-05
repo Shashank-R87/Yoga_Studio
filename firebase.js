@@ -2,6 +2,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getDatabase } from "firebase/database";
 
 // import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -13,6 +14,7 @@ import { getAuth } from "firebase/auth";
 const firebaseConfig = {
   apiKey: "AIzaSyATHn9E9QhuZp3JgoIfZz8KS9C2HnNIoN8",
   authDomain: "yoga-studio-ecd57.firebaseapp.com",
+  databaseURL: "https://yoga-studio-ecd57-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "yoga-studio-ecd57",
   storageBucket: "yoga-studio-ecd57.appspot.com",
   messagingSenderId: "799119249741",
@@ -24,5 +26,6 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+export const database = getDatabase(app);
 
 // export const analytics = getAnalytics(app);

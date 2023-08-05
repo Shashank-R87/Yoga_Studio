@@ -11,6 +11,7 @@ import WorkoutCard from '../components/WorkoutCard';
 import LottieView from "lottie-react-native";
 
 const HomeScreen = () => {
+    
     NavigationBar.setVisibilityAsync("hidden");
     NavigationBar.setBehaviorAsync("overlay-swipe");
 
@@ -66,7 +67,6 @@ const HomeScreen = () => {
     useEffect(() => {
         getUser();
         poseNames();
-        // console.log("Current Screen Name: ", route.name);
     }, [])
 
     return (

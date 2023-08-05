@@ -2,7 +2,7 @@
 <h4 align="center">A simple yoga android app which is made using the React Native framework (actually Expo).</h4>
 
 <hr/>
-Sample development build: https://expo.dev/artifacts/eas/j1eGpUk2qQ1KaML2EsAMfz.apk
+Sample development build is available in the releases section
 <hr/>
 <h3 align="left">How to run this project ?</h3>
 

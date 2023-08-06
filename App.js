@@ -10,6 +10,7 @@ import LoginScreen from './screens/LoginScreen';
 import AboutYou from './screens/AboutYou';
 import HomeScreen from './screens/HomeScreen';
 import MainHomeScreen from './screens/MainHomeScreen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,16 +34,18 @@ export default function App() {
   if (!loaded) return null;
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen options={{ headerShown: false }} name="Main" component={MainScreen} />
-        <Stack.Screen options={{ headerShown: false }} name="MainHome" component={MainHomeScreen} />
-        <Stack.Screen options={{ headerShown: false, animation: 'fade_from_bottom' }} name="LoginSignup" component={LoginSignupScreen} />
-        <Stack.Screen options={{ headerShown: false, animation: 'fade_from_bottom' }} name="AboutYou" component={AboutYou} />
-        <Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignupScreen} />
-        <Stack.Screen options={{ headerShown: false }} name="LogIn" component={LoginScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1}}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen options={{ headerShown: false }} name="Main" component={MainScreen} />
+          <Stack.Screen options={{ headerShown: false }} name="MainHome" component={MainHomeScreen} />
+          <Stack.Screen options={{ headerShown: false, animation: 'fade_from_bottom' }} name="LoginSignup" component={LoginSignupScreen} />
+          <Stack.Screen options={{ headerShown: false, animation: 'fade_from_bottom' }} name="AboutYou" component={AboutYou} />
+          <Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignupScreen} />
+          <Stack.Screen options={{ headerShown: false }} name="LogIn" component={LoginScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
 

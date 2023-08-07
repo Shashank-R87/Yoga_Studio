@@ -1,13 +1,14 @@
-import { View, Text, Image, Pressable, Modal } from 'react-native'
+import { View, Text, Image, Pressable, Modal, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
-import { auth } from '../firebase'
+import { auth, database } from '../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import AnimatedLottieView from 'lottie-react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import { FlashList } from '@shopify/flash-list'
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist'
+import { ref, set } from 'firebase/database'
 
 const CreateWorkout = () => {
 
@@ -15,6 +16,7 @@ const CreateWorkout = () => {
     const [userdisplayName, setuserdisplayName] = useState();
 
     const firebase_auth = auth;
+    const firebase_db = database;
 
     const getUser = async () => {
         await onAuthStateChanged(firebase_auth, (response) => {
@@ -103,18 +105,45 @@ const CreateWorkout = () => {
 
     const [selectAsanasVisible, setSelectAsanasVisible] = useState(false)
 
+    const [saveWorkoutModal, setsaveWorkoutModal] = useState(false)
+    const [workoutName, setworkoutName] = useState();
+    const [restTime, setrestTime] = useState()
+    const [saveWorkout, setsaveWorkout] = useState(false)
+
+    useEffect(() => {
+        if (workoutName && restTime && restTime != "0") {
+            setsaveWorkout(true);
+        }
+        else {
+            setsaveWorkout(false);
+        }
+    }, [workoutName, restTime])
+
+    const SaveWorkoutOnline = () => {
+        set(ref(firebase_db, "users/" + firebase_auth.currentUser.uid + "/workouts/" + workoutName), {
+            workoutname: workoutName,
+            workoutdata: selectedData,
+        })
+            .then(() => {
+                setSelectedIDs([]);
+                setselectedData([]);
+                setgotSD(false)
+                setsaveWorkoutModal(false)
+            })
+    }
+
     const renderItem = ({ drag, item, isActive }) => {
         return (
             <ScaleDecorator activeScale={1.02}>
                 <View style={{ marginBottom: 20, paddingLeft: 20, width: "91.5%", height: 100, marginLeft: 15 }} className="bg-white flex-row justify-between items-center rounded-xl">
                     <Text style={{ fontFamily: "PoppinsRegular", paddingTop: 3, fontSize: 14, maxWidth: "60%" }}>{item.en_name}</Text>
                     <View className="flex-row">
-                        <TouchableOpacity onPress={() => { deleteSelectedData(item._id) }} style={{ padding: 10, marginRight: 10 }} className="">
+                        <Pressable onPress={() => { deleteSelectedData(item._id) }} style={{ padding: 10, marginRight: 10 }} className="">
                             <Image style={{ width: 20, height: 22 }} source={require("../assets/icons/delete.png")} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPressIn={drag} disabled={isActive} style={{ padding: 10, marginRight: 10 }} className="">
+                        </Pressable>
+                        <Pressable onPressIn={drag} disabled={isActive} style={{ padding: 10, marginRight: 10 }} className="">
                             <Image style={{ width: 22, height: 22 }} source={require("../assets/icons/dragdrop.png")} />
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                 </View>
             </ScaleDecorator>
@@ -164,9 +193,21 @@ const CreateWorkout = () => {
                             {
                                 gotSD ?
                                     <View style={{ bottom: 5 }} className="flex justify-center items-center absolute">
-                                        <TouchableOpacity style={{ paddingVertical: 10, paddingHorizontal: 20 }} className="bg-[#E63946] flex justify-center items-center rounded-full">
+                                        <Pressable
+                                            onPress={() => {
+                                                if (selectedData.length > 1) {
+                                                    setsaveWorkoutModal(true)
+                                                }
+                                                else if (selectedData.length == 1) {
+                                                    Alert.alert("Selected One", "Please select more than one asanas to save as workout", ["Ok"])
+                                                }
+                                                else {
+                                                    Alert.alert("Selected None", "Please select asanas to save as workout", ["Ok"])
+                                                }
+                                            }}
+                                            style={{ paddingVertical: 10, paddingHorizontal: 20 }} className="bg-[#E63946] flex justify-center items-center rounded-full">
                                             <Text className="text-white pt-[3px]" style={{ fontFamily: "PoppinsRegular", fontSize: 14 }}>Create Workout</Text>
-                                        </TouchableOpacity>
+                                        </Pressable>
                                     </View>
                                     :
                                     <View></View>
@@ -224,8 +265,34 @@ const CreateWorkout = () => {
                     </View>
                 </View>
             </Modal>
+            <Modal
+                transparent={true}
+                visible={saveWorkoutModal}
+                onRequestClose={() => { setsaveWorkoutModal(false) }}
+                statusBarTranslucent={true}
+            >
+                <View style={{ paddingHorizontal: 25 }} className="flex-1 justify-center items-center bg-[#00000035]">
+                    <View style={{ width: "100%", minHeight: "30%", maxHeight: "40%", gap: 20, paddingHorizontal: 10, paddingVertical: 40 }} className="bg-white rounded-xl justify-center items-center">
+                        <Pressable onPress={() => { setsaveWorkoutModal(false) }} style={{ position: 'absolute', top: 20, right: 20 }}>
+                            <Image source={require("../assets/icons/close.png")} />
+                        </Pressable>
+                        <TextInput onChangeText={(value) => { setworkoutName(value); }} style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "90%", height: 60, fontSize: 16, marginTop: 40 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Name of workout' />
+                        <TextInput keyboardType='number-pad' onChangeText={(value) => { setrestTime(value); }} style={{ paddingHorizontal: 24, fontFamily: "PoppinsRegular", minWidth: "90%", height: 60, fontSize: 16 }} placeholderTextColor={"#92979E"} className="text-[#383838] pt-[4px] border-[2px] border-[#E5E6EB] rounded-full focus:border-[#383838]" placeholder='Rest time in seconds' />
+                        {
+                            saveWorkout ?
+                                <Pressable onPress={() => { SaveWorkoutOnline() }} style={{ paddingVertical: 16, minWidth: "90%" }} className="flex cursor-pointer justify-center items-center bg-[#E63946] rounded-full">
+                                    <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-[#fff] pt-[4px]">Save Workout</Text>
+                                </Pressable>
+                                :
+                                <Pressable style={{ paddingVertical: 16, minWidth: "90%" }} className="flex cursor-pointer justify-center items-center bg-[#E5E6EB] rounded-full">
+                                    <Text style={{ fontFamily: "PoppinsRegular", fontSize: 14 }} className="text-gray-400 pt-[4px]">Save Workout</Text>
+                                </Pressable>
+                        }
+                    </View>
+                </View>
+            </Modal>
             <StatusBar style='dark' />
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 

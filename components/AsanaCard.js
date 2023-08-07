@@ -4,7 +4,7 @@ import { Svg, Path } from 'react-native-svg';
 
 const AsanaCard = ({ title }) => {
     return (
-        <View style={{ width: 150, height: 150, paddingHorizontal: 20, paddingVertical: 20, gap: -2 }} className="bg-[#A8DADC] flex-col justify-end items-start rounded-[10px]">
+        <View style={{ width: 150, height: 150, paddingHorizontal: 20, paddingVertical: 20, gap: -2 }} className="bg-[#1B2A41] flex-col justify-end items-start rounded-[10px]">
             <View style={{right: 20, top: 20}} className="absolute">
                 <Svg fill="white" width="18px" height="18px" viewBox="0 0 484.651 484.65">
                     <Path d="M243.458,153.771c0.085,0,0.171-0.006,0.257-0.006c0.087,0,0.172,0.006,0.258,0.006

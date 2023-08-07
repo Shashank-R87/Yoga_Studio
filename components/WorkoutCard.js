@@ -4,7 +4,7 @@ import { Svg, Path, Circle, G } from 'react-native-svg';
 
 const WorkoutCard = ({ title, time, pcount }) => {
     return (
-        <View style={{ width: 300, height: 200, paddingHorizontal: 20, paddingVertical: 20, gap: 0 }} className="bg-[#81B29A] flex-col justify-end items-start rounded-[10px]">
+        <View style={{ width: 300, height: 200, paddingHorizontal: 20, paddingVertical: 20, gap: 0 }} className="bg-[#0C1821] flex-col justify-end items-start rounded-[10px]">
             <View style={{right: 20, top: 20}} className="absolute">
                 <Svg fill="white" height="24px" width="24px" version="1.1" id="Layer_1"
                     viewBox="0 0 512.001 512.001">

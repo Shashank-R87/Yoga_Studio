@@ -8,7 +8,7 @@ import LoginSignupScreen from './screens/LoginSignupScreen';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
 import AboutYou from './screens/AboutYou';
-import HomeScreen from './screens/HomeScreen';
+// import HomeScreen from './screens/HomeScreen';
 import MainHomeScreen from './screens/MainHomeScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 

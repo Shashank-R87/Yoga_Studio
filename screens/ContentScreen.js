@@ -1,36 +1,30 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, Modal, Pressable, FlatList } from 'react-native'
+import { View, Text, Image, ScrollView, TouchableOpacity, Modal, Pressable, FlatList, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as NavigationBar from 'expo-navigation-bar';
 import { useNavigation, useRoute } from '@react-navigation/native'
 import LottieView from 'lottie-react-native'
-import { onAuthStateChanged, signOut } from 'firebase/auth'
-import { auth } from '../firebase';
-import AsanaCard from '../components/AsanaCard';
-import AsanaCardLarge from '../components/AsanaCardLarge';
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth, database } from '../firebase';
 import { StatusBar } from 'expo-status-bar';
 import { FlashList } from '@shopify/flash-list';
+import { ref } from 'firebase/database';
 
 const ContentScreen = () => {
     NavigationBar.setVisibilityAsync("hidden");
     NavigationBar.setBehaviorAsync("overlay-swipe");
 
-    const navigation = useNavigation();
-    const route = useRoute();
-
     const [loggedIn, setloggedIn] = useState(false);
 
-    const [userEmail, setuserEmail] = useState();
-    const [userUID, setuserUID] = useState();
     const [userdisplayName, setuserdisplayName] = useState();
 
     const firebase_auth = auth;
+    const firebase_db = database;
+    const firebase_db_ref = ref(firebase_db);
 
     const getUser = async () => {
         await onAuthStateChanged(firebase_auth, (response) => {
             if (response) {
-                setuserEmail(response.email);
-                setuserUID(response.uid);
                 setuserdisplayName(response.displayName.split(" ")[0]);
                 setTimeout(() => {
                     setloggedIn(true);
@@ -176,7 +170,7 @@ const ContentScreen = () => {
                                                 showsVerticalScrollIndicator={false}
                                                 data={filterSelected ? filteredData : poses}
                                                 renderItem={({ item }) =>
-                                                    <TouchableOpacity activeOpacity={0.5} onPress={() => { getId(item._id) }} className="bg-white rounded-xl" style={{ marginBottom: 20, width: 150, height: 150 }}>
+                                                    <TouchableOpacity activeOpacity={0.5} onPress={() => { getId(item._id) }} className="bg-[#1B2A41] rounded-xl" style={{ marginBottom: 20, width: 150, height: 150 }}>
                                                         <Image className="absolute rounded-xl" style={{ width: 150, height: 150 }} resizeMode='cover' source={{ uri: item.imgUrl }} />
                                                         <View className="bg-[#0000003e] rounded-xl flex items-start justify-end" style={{ padding: 20, marginBottom: 20, width: 150, height: 150 }}>
                                                             {
